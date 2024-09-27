@@ -95,9 +95,21 @@ function CameraController({ scrollY }) {
   
   useFrame(() => {
     if (scrollY > 2000) {
-      camera.position.lerp(new THREE.Vector3(0, 1, 3), 0.01);
+      camera.position.lerp(new THREE.Vector3(isMobile ? 0 : 0, isMobile ? 4 : 4, isMobile ? 4 : 2), 0.01);
+      if (isMobile) {
+        camera.rotation.x = THREE.MathUtils.lerp(camera.rotation.x, THREE.MathUtils.degToRad(-50), 0.01);
+        camera.rotation.y = THREE.MathUtils.lerp(camera.rotation.y, THREE.MathUtils.degToRad(5), 0.01);
+        camera.rotation.z = THREE.MathUtils.lerp(camera.rotation.z, THREE.MathUtils.degToRad(0), 0.01);
+      } else {
+        camera.rotation.x = THREE.MathUtils.lerp(camera.rotation.x, THREE.MathUtils.degToRad(10), 0.01);
+        camera.rotation.y = THREE.MathUtils.lerp(camera.rotation.y, THREE.MathUtils.degToRad(10), 0.01);
+        camera.rotation.z = THREE.MathUtils.lerp(camera.rotation.z, THREE.MathUtils.degToRad(50), 0.01);
+      }
     } else {
-      camera.position.lerp(new THREE.Vector3(0, 2, 4), 0.01);
+      camera.position.lerp(new THREE.Vector3(isMobile ? 0 : 0, isMobile ? 0.5 : 2, isMobile ? 3 : 3.5), 0.01);
+      camera.rotation.x = THREE.MathUtils.lerp(camera.rotation.x, THREE.MathUtils.degToRad(0), 0.01);
+      camera.rotation.y = THREE.MathUtils.lerp(camera.rotation.y, THREE.MathUtils.degToRad(0), 0.01);
+      camera.rotation.z = THREE.MathUtils.lerp(camera.rotation.z, THREE.MathUtils.degToRad(0), 0.01);
     }
   });
 
