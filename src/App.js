@@ -1,11 +1,12 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react';
+import React, { useRef, useEffect, useState, useMemo, Suspense } from 'react';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
-import { useGLTF, OrbitControls, Environment } from '@react-three/drei';
+import { useGLTF, OrbitControls, useProgress } from '@react-three/drei';
+import Loader from './components/Loader';
 import Lenis from '@studio-freight/lenis';
 import * as THREE from 'three';
 import './App.css';
 
-function CarModel({ scrollY }) {
+function CarModel({ scrollY, setIsLoading }) {
   const { scene } = useGLTF('/blender/scene.gltf');
   const [isTextureRemoved, setIsTextureRemoved] = useState(false);
   const { gl, camera } = useThree();
@@ -20,6 +21,10 @@ function CarModel({ scrollY }) {
     });
     return materials;
   }, [scene]);
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, [scene, setIsLoading]);
 
   useEffect(() => {
     scene.rotation.y = scrollY * 0.002;
@@ -134,12 +139,10 @@ function DynamicPointLight({ scrollY, intensity, color, position }) {
 
 function App() {
   const [scrollY, setScrollY] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const lenisRef = useRef();
 
   useEffect(() => {
-    // Set the page title
-    document.title = "GLTF + React Three";
-
     lenisRef.current = new Lenis({
       duration: 5,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -173,6 +176,8 @@ function App() {
        }
     });
 
+    useGLTF.preload('/blender/scene.gltf');
+
     return () => {
       lenisRef.current.destroy();
       document.body.classList.remove('last');
@@ -185,20 +190,23 @@ function App() {
 
   return (
     <div className="App">
+      {isLoading && <Loader />}
       <Canvas camera={{ position: [0, 0, 5], fov: 75 }} className='canvas-wrapper'>
-        <ambientLight color='teal' intensity={2} />
-        <ambientLight color='white' intensity={0.5} />
-        <pointLight color='white' position={[0, 2, 0]} intensity={4} />
-        <pointLight color='red' position={[-2, 2, -2]} intensity={10} />
-        <pointLight color='purple' position={[2, 2, 2]} intensity={10} />
-        <DynamicPointLight scrollY={scrollY} intensity={10} color='red' position={[-2, 2, -2]}/>
-        <DynamicPointLight scrollY={scrollY} intensity={10} color='purple' position={[2, 2, 2]}/>
-        <directionalLight color='teal' position={[0, 5, 0]} intensity={2} />
-        <directionalLight color='teal' position={[0, -5, 0]} intensity={10} />
-        <CarModel scrollY={scrollY} />
-        <CameraController scrollY={scrollY} />
-        <OrbitControls enableZoom={false} enablePan={false} />
-        <Resize />
+        <Suspense fallback={null}>
+          <ambientLight color='teal' intensity={2} />
+          <ambientLight color='white' intensity={0.5} />
+          <pointLight color='white' position={[0, 2, 0]} intensity={4} />
+          <pointLight color='red' position={[-2, 2, -2]} intensity={10} />
+          <pointLight color='purple' position={[2, 2, 2]} intensity={10} />
+          <DynamicPointLight scrollY={scrollY} intensity={10} color='red' position={[-2, 2, -2]}/>
+          <DynamicPointLight scrollY={scrollY} intensity={10} color='purple' position={[2, 2, 2]}/>
+          <directionalLight color='teal' position={[0, 5, 0]} intensity={2} />
+          <directionalLight color='teal' position={[0, -5, 0]} intensity={10} />
+          <CarModel setIsLoading={setIsLoading} scrollY={scrollY} />
+          <CameraController scrollY={scrollY} />
+          <OrbitControls enableZoom={false} enablePan={false} />
+          <Resize />
+        </Suspense>
       </Canvas>
       <div className="scroll-content">
         <section className='hero'>

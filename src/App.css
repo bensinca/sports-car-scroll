@@ -71,8 +71,7 @@ section {
 
 .scroll-content h1 {
   text-transform: uppercase;
-  font-size: 130px;
-  line-height: 0.3;
+  font-size: 70px;
 }
 
 section.hero {
@@ -81,11 +80,58 @@ section.hero {
 
 
 .scroll-content h2 {
-  font-size: 40px;
-  line-height: 0.3;
+  font-size: 35px;
   margin-top: auto;
+  padding: 0 10px;
 }
 
 .scroll-content p {
   font-size: 20px;
+  padding: 0 10px;
+}
+
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.loader-bar {
+  width: 0;
+  height: 4px;
+  background: teal;
+  transition: width 0.3s ease;
+}
+
+.loader-text {
+  margin-top: 20px;
+  font-size: 18px;
+  color: white;
+}
+
+@media screen and (min-width: 1024px) {
+  .scroll-content h1 {
+    font-size: 130px;
+    line-height: 0.3;
+  }
+
+  .scroll-content h2 {
+    font-size: 40px;
+    line-height: 0.3;
+    padding: 0;
+  }   
+
+  .scroll-content p {
+    font-size: 20px;
+    padding: 0;
+  }
+  
 }
