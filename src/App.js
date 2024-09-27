@@ -35,7 +35,7 @@ function CarModel({ scrollY, setIsLoading }) {
     scene.traverse((child) => {
       if (child.isMesh) {
         child.material = new THREE.MeshStandardMaterial({
-          color: 0xcccccc, // Light gray color
+          color: 0x333333, // Light gray color
           metalness: 0.5,
           roughness: 0.5,
         });
