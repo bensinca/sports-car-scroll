@@ -4,6 +4,7 @@ import { useGLTF, OrbitControls, useProgress } from '@react-three/drei';
 import Loader from './components/Loader';
 import Lenis from '@studio-freight/lenis';
 import * as THREE from 'three';
+import { isMobile } from 'react-device-detect';
 import './App.css';
 
 function CarModel({ scrollY, setIsLoading }) {
@@ -188,6 +189,21 @@ function App() {
     lenisRef.current.scrollTo(target);
   };
 
+  useEffect(() => {
+    const canvas = document.querySelector('canvas');
+    if (canvas) {
+      const preventTouch = (e) => {
+        e.preventDefault();
+      };
+      canvas.addEventListener('touchstart', preventTouch, { passive: false });
+      canvas.addEventListener('touchmove', preventTouch, { passive: false });
+      return () => {
+        canvas.removeEventListener('touchstart', preventTouch);
+        canvas.removeEventListener('touchmove', preventTouch);
+      };
+    }
+  }, []);
+
   return (
     <div className="App">
       {isLoading && <Loader />}
@@ -204,7 +220,7 @@ function App() {
           <directionalLight color='teal' position={[0, -5, 0]} intensity={10} />
           <CarModel setIsLoading={setIsLoading} scrollY={scrollY} />
           <CameraController scrollY={scrollY} />
-          <OrbitControls enableZoom={false} enablePan={false} />
+          {!isMobile && <OrbitControls enableZoom={false} enablePan={false} />}
           <Resize />
         </Suspense>
       </Canvas>
