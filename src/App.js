@@ -187,6 +187,7 @@ function App() {
     <div className="App">
       <Canvas camera={{ position: [0, 0, 5], fov: 75 }} className='canvas-wrapper'>
         <ambientLight color='teal' intensity={2} />
+        <ambientLight color='white' intensity={0.5} />
         <pointLight color='white' position={[0, 2, 0]} intensity={4} />
         <pointLight color='red' position={[-2, 2, -2]} intensity={10} />
         <pointLight color='purple' position={[2, 2, 2]} intensity={10} />
